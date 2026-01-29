@@ -1,0 +1,9 @@
+node_modules
+dist
+packages/*/dist
+.DS_Store
+.env
+.env.local
+.env.*
+.next
+examples/**/node_modules
