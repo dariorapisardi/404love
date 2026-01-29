@@ -1,0 +1,19 @@
+{
+  "name": "404love-next-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@404love/next": "file:../../packages/next",
+    "next": "^15.5.11",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "devDependencies": {
+    "@types/node": "25.1.0"
+  }
+}
