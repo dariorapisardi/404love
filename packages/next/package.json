@@ -30,5 +30,24 @@
     "@types/react": "^18.2.0",
     "tsup": "^8.0.1",
     "typescript": "^5.3.3"
-  }
+  },
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "/dariorapisardi/404love"
+  },
+  "keywords": [
+    "nextjs",
+    "react",
+    "framework",
+    "router",
+    "app-router",
+    "server-components",
+    "ssr",
+    "static-site-generation",
+    "edge-runtime",
+    "middleware",
+    "typescript"
+  ],
+  "author": "Dario Rapisardi"
 }
