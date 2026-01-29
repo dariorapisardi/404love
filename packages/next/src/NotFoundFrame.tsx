@@ -49,22 +49,22 @@ const DEFAULT_BACK_LINK_WRAPPER_STYLE: CSSProperties = {
   zIndex: 10,
 }
 
-export default function NotFoundFrame({ serverReferrer, options }: NotFoundFrameProps) {
-  const [referrer, setReferrer] = useState(() => options.referrer ?? serverReferrer)
+export default function NotFoundFrame({ serverReferer, options }: NotFoundFrameProps) {
+  const [referer, setReferer] = useState(() => options.referer ?? serverReferer)
 
   useEffect(() => {
-    if (options.referrer) {
+    if (options.referer) {
       return
     }
-    const clientReferrer = document.referrer
-    if (clientReferrer && clientReferrer !== referrer) {
-      setReferrer(clientReferrer)
+    const clientReferer = document.referrer
+    if (clientReferer && clientReferer !== referer) {
+      setReferer(clientReferer)
     }
-  }, [options.referrer, referrer])
+  }, [options.referer, referer])
 
   const src = build404Url({
     baseUrl: options.baseUrl,
-    referrer,
+    referer,
     query: options.query,
   })
 
@@ -88,7 +88,7 @@ export default function NotFoundFrame({ serverReferrer, options }: NotFoundFrame
       {options.includeBackLink !== false ? (
         <div style={DEFAULT_BACK_LINK_WRAPPER_STYLE}>
           <BackLink
-            referrer={referrer}
+            referer={referer}
             label={options.backLinkLabel ?? "Go back"}
             className={options.backLinkClassName}
             style={backLinkStyle}

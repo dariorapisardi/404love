@@ -5,9 +5,9 @@ import type { NotFoundPageOptions } from "./types.js"
 export const createNotFoundPage = (options: NotFoundPageOptions = {}) => {
   return async function NotFoundPage() {
     const headersList = await headers()
-    const serverReferrer =
+    const serverReferer =
       headersList.get("referer") || headersList.get("referrer") || ""
 
-    return <NotFoundFrame serverReferrer={serverReferrer} options={options} />
+    return <NotFoundFrame serverReferer={serverReferer} options={options} />
   }
 }

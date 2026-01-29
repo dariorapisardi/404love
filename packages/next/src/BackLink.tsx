@@ -3,15 +3,15 @@
 import type { CSSProperties, MouseEvent } from "react"
 
 interface BackLinkProps {
-  referrer: string
+  referer: string
   label: string
   className?: string
   style?: CSSProperties
 }
 
-export default function BackLink({ referrer, label, className, style }: BackLinkProps) {
+export default function BackLink({ referer, label, className, style }: BackLinkProps) {
   const handleClick = (event: MouseEvent<HTMLAnchorElement>) => {
-    if (!referrer) {
+    if (!referer) {
       event.preventDefault()
       window.history.back()
     }
@@ -19,7 +19,7 @@ export default function BackLink({ referrer, label, className, style }: BackLink
 
   return (
     <a
-      href={referrer || "/"}
+      href={referer || "/"}
       onClick={handleClick}
       className={className}
       style={style}

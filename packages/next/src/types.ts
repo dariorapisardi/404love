@@ -2,7 +2,7 @@ import type { CSSProperties, IframeHTMLAttributes } from "react"
 
 export interface NotFoundPageOptions {
   baseUrl?: string
-  referrer?: string
+  referer?: string
   includeBackLink?: boolean
   backLinkLabel?: string
   backLinkClassName?: string
@@ -20,6 +20,6 @@ export interface NotFoundPageOptions {
 }
 
 export interface NotFoundFrameProps {
-  serverReferrer: string
+  serverReferer: string
   options: NotFoundPageOptions
 }
