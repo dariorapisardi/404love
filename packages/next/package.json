@@ -1,6 +1,6 @@
 {
   "name": "@404love/next",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "description": "Next.js helpers for 404found.love",
   "license": "MIT",
   "type": "module",
@@ -34,7 +34,7 @@
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "/dariorapisardi/404love"
+    "url": "https://github.com/dariorapisardi/404love"
   },
   "keywords": [
     "nextjs",
