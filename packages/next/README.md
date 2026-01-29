@@ -75,10 +75,6 @@ export default async function Page() {
 
 See the repository for a minimal Next.js example in `examples/basic`.
 
-## Roadmap
-
-- Host-native component that renders adoptable pets directly (no iframe).
-
 ## License
 
 MIT
