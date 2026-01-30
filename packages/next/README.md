@@ -36,6 +36,7 @@ export default createNotFoundPage({
   backLinkLabel: "Back to site",
   query: { source: "app-router" },
   iframeTitle: "404 Love Found",
+  syncFrameBackground: true,
 })
 ```
 
@@ -43,6 +44,8 @@ export default createNotFoundPage({
 
 - `baseUrl`: override the default `https://404found.love/frame`.
 - `referer`: override the detected referrer.
+- `syncFrameBackground`: post the host background color to the iframe (default: true).
+- `frameBackgroundTargetOrigin`: override the `postMessage` target origin for background sync (defaults to `https://404found.love`, disabled for other origins).
 - `includeBackLink`: show or hide the top-level back link.
 - `backLinkLabel`: custom label for the back link.
 - `backLinkClassName`, `backLinkStyle`: customize the back link.
@@ -58,6 +61,8 @@ import { createNotFoundPage } from "@404love/next"
 export default createNotFoundPage({
   baseUrl: "https://404found.love/frame",
   referer: "https://example.com/marketing",
+  syncFrameBackground: true,
+  frameBackgroundTargetOrigin: "https://404found.love",
   includeBackLink: true,
   backLinkLabel: "Return to site",
   backLinkClassName: "notfound-back-link",
