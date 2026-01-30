@@ -50,8 +50,29 @@ const DEFAULT_BACK_LINK_WRAPPER_STYLE: CSSProperties = {
 }
 
 const MESSAGE_TYPE = "frame:set-background"
+const DEFAULT_FRAME_ORIGIN = "https://404found.love"
 
 const normalizeColor = (color: string) => color.replace(/\s+/g, "").toLowerCase()
+
+const parseAlpha = (normalized: string) => {
+  const match = normalized.match(/^(rgba?|hsla?)\((.+)\)$/)
+  if (!match) {
+    return null
+  }
+
+  const body = match[2]
+  if (body.includes("/")) {
+    const alpha = body.split("/")[1]
+    return Number.parseFloat(alpha)
+  }
+
+  const parts = body.split(",")
+  if (parts.length < 4) {
+    return null
+  }
+
+  return Number.parseFloat(parts[3])
+}
 
 const isTransparent = (color: string | null) => {
   if (!color) {
@@ -59,7 +80,12 @@ const isTransparent = (color: string | null) => {
   }
 
   const normalized = normalizeColor(color)
-  return normalized === "transparent" || normalized === "rgba(0,0,0,0)"
+  if (normalized === "transparent") {
+    return true
+  }
+
+  const alpha = parseAlpha(normalized)
+  return alpha !== null && Number.isFinite(alpha) && alpha === 0
 }
 
 const readHostBackground = () => {
@@ -107,9 +133,10 @@ export default function NotFoundFrame({ serverReferer, options }: NotFoundFrameP
     }
 
     try {
-      return new URL(src).origin
+      const origin = new URL(src).origin
+      return origin === DEFAULT_FRAME_ORIGIN ? origin : null
     } catch {
-      return "*"
+      return null
     }
   }, [options.frameBackgroundTargetOrigin, src])
 
@@ -119,7 +146,7 @@ export default function NotFoundFrame({ serverReferer, options }: NotFoundFrameP
     }
 
     const frameWindow = iframeRef.current?.contentWindow
-    if (!frameWindow) {
+    if (!frameWindow || !frameBackgroundTargetOrigin) {
       return
     }
 

@@ -45,7 +45,7 @@ export default createNotFoundPage({
 - `baseUrl`: override the default `https://404found.love/frame`.
 - `referer`: override the detected referrer.
 - `syncFrameBackground`: post the host background color to the iframe (default: true).
-- `frameBackgroundTargetOrigin`: override the `postMessage` target origin for background sync.
+- `frameBackgroundTargetOrigin`: override the `postMessage` target origin for background sync (defaults to `https://404found.love`, disabled for other origins).
 - `includeBackLink`: show or hide the top-level back link.
 - `backLinkLabel`: custom label for the back link.
 - `backLinkClassName`, `backLinkStyle`: customize the back link.
