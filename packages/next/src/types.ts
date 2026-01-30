@@ -3,6 +3,8 @@ import type { CSSProperties, IframeHTMLAttributes } from "react"
 export interface NotFoundPageOptions {
   baseUrl?: string
   referer?: string
+  syncFrameBackground?: boolean
+  frameBackgroundTargetOrigin?: string
   includeBackLink?: boolean
   backLinkLabel?: string
   backLinkClassName?: string

@@ -1,7 +1,7 @@
 "use client"
 
-import type { CSSProperties } from "react"
-import { useEffect, useState } from "react"
+import type { CSSProperties, SyntheticEvent } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import BackLink from "./BackLink.js"
 import { build404Url } from "./url.js"
 import type { NotFoundFrameProps } from "./types.js"
@@ -49,8 +49,39 @@ const DEFAULT_BACK_LINK_WRAPPER_STYLE: CSSProperties = {
   zIndex: 10,
 }
 
+const MESSAGE_TYPE = "frame:set-background"
+
+const normalizeColor = (color: string) => color.replace(/\s+/g, "").toLowerCase()
+
+const isTransparent = (color: string | null) => {
+  if (!color) {
+    return true
+  }
+
+  const normalized = normalizeColor(color)
+  return normalized === "transparent" || normalized === "rgba(0,0,0,0)"
+}
+
+const readHostBackground = () => {
+  const bodyColor = document.body
+    ? window.getComputedStyle(document.body).backgroundColor
+    : null
+  const htmlColor = window.getComputedStyle(document.documentElement).backgroundColor
+
+  if (!isTransparent(bodyColor)) {
+    return bodyColor
+  }
+
+  if (!isTransparent(htmlColor)) {
+    return htmlColor
+  }
+
+  return "transparent"
+}
+
 export default function NotFoundFrame({ serverReferer, options }: NotFoundFrameProps) {
   const [referer, setReferer] = useState(() => options.referer ?? serverReferer)
+  const iframeRef = useRef<HTMLIFrameElement | null>(null)
 
   useEffect(() => {
     if (options.referer) {
@@ -68,6 +99,36 @@ export default function NotFoundFrame({ serverReferer, options }: NotFoundFrameP
     query: options.query,
   })
 
+  const syncFrameBackground = options.syncFrameBackground !== false
+
+  const frameBackgroundTargetOrigin = useMemo(() => {
+    if (options.frameBackgroundTargetOrigin) {
+      return options.frameBackgroundTargetOrigin
+    }
+
+    try {
+      return new URL(src).origin
+    } catch {
+      return "*"
+    }
+  }, [options.frameBackgroundTargetOrigin, src])
+
+  const postFrameBackground = useCallback(() => {
+    if (!syncFrameBackground) {
+      return
+    }
+
+    const frameWindow = iframeRef.current?.contentWindow
+    if (!frameWindow) {
+      return
+    }
+
+    frameWindow.postMessage(
+      { type: MESSAGE_TYPE, color: readHostBackground() },
+      frameBackgroundTargetOrigin
+    )
+  }, [frameBackgroundTargetOrigin, syncFrameBackground])
+
   const containerStyle = {
     ...DEFAULT_CONTAINER_STYLE,
     ...options.containerStyle,
@@ -81,6 +142,57 @@ export default function NotFoundFrame({ serverReferer, options }: NotFoundFrameP
   const backLinkStyle = {
     ...DEFAULT_BACK_LINK_STYLE,
     ...options.backLinkStyle,
+  }
+
+  useEffect(() => {
+    if (!syncFrameBackground) {
+      return
+    }
+
+    postFrameBackground()
+
+    const html = document.documentElement
+    const body = document.body
+
+    const observer = new MutationObserver(() => postFrameBackground())
+    observer.observe(html, {
+      attributes: true,
+      attributeFilter: ["class", "style"],
+    })
+    if (body) {
+      observer.observe(body, {
+        attributes: true,
+        attributeFilter: ["class", "style"],
+      })
+    }
+
+    const mediaQuery = window.matchMedia?.("(prefers-color-scheme: dark)")
+    const handleMediaChange = () => postFrameBackground()
+
+    if (mediaQuery?.addEventListener) {
+      mediaQuery.addEventListener("change", handleMediaChange)
+    } else if (mediaQuery?.addListener) {
+      mediaQuery.addListener(handleMediaChange)
+    }
+
+    return () => {
+      observer.disconnect()
+      if (mediaQuery?.removeEventListener) {
+        mediaQuery.removeEventListener("change", handleMediaChange)
+      } else if (mediaQuery?.removeListener) {
+        mediaQuery.removeListener(handleMediaChange)
+      }
+    }
+  }, [postFrameBackground, syncFrameBackground])
+
+  const handleFrameLoad = (event: SyntheticEvent<HTMLIFrameElement>) => {
+    options.iframeProps?.onLoad?.(event)
+    postFrameBackground()
+  }
+
+  const iframeProps = {
+    ...options.iframeProps,
+    onLoad: handleFrameLoad,
   }
 
   return (
@@ -100,7 +212,8 @@ export default function NotFoundFrame({ serverReferer, options }: NotFoundFrameP
         src={src}
         className={options.iframeClassName}
         style={iframeStyle}
-        {...options.iframeProps}
+        ref={iframeRef}
+        {...iframeProps}
       />
     </div>
   )
