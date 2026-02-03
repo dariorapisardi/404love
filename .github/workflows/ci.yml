@@ -1,26 +1,22 @@
-name: Publish Package
+name: CI
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches: [main]
+  pull_request:
 
 permissions:
-  id-token: write  # Required for OIDC
   contents: read
 
 jobs:
-  publish:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
           cache: 'npm'
-          registry-url: 'https://registry.npmjs.org'
       - run: npm install
       - run: npm run build --if-present
       - run: npm run test
-      - run: npm publish --workspace @404love/next --access public --provenance --no-git-checks

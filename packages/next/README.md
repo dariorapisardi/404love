@@ -98,7 +98,7 @@ navigates the host history (or the detected referrer) so the user exits the ifra
 
 ## Example app
 
-See the repository for a minimal Next.js example in `examples/basic`.
+See the repository for a minimal Next.js example in [`examples/basic`](../../examples/basic).
 
 ## License
 
