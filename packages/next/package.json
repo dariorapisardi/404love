@@ -20,7 +20,8 @@
   "scripts": {
     "build": "tsup",
     "test": "npm run test:integration",
-    "test:integration": "npm run build && npm --prefix ../../examples/basic run build"
+    "test:integration": "npm run build",
+    "test:example": "npm --prefix ../../examples/basic run build"
   },
   "peerDependencies": {
     "next": ">=13.4.0",

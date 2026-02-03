@@ -12,6 +12,7 @@ Thanks for helping improve 404love. Please keep changes focused, readable, and r
 
 - `npm --prefix packages/next run build`
 - `npm --prefix examples/basic run dev`
+- `npm --workspace @404love/next run test:example`
 
 ## Changesets
 
