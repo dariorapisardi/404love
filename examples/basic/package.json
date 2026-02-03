@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@404love/next": "file:../../packages/next",
-    "next": "^15.5.11",
+    "next": "^16.1.5",
     "react": "^19.2.4",
     "react-dom": "^19.2.4"
   },
