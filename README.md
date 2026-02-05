@@ -49,6 +49,16 @@ export default createNotFoundPage()
 - `@404love/next` in `packages/next`
 - For Next.js usage, see [`packages/next/README.md`](packages/next/README.md).
 
+## Skills
+
+Install the 404love Next.js skill with the skills.sh CLI:
+
+```bash
+npx skills add dariorapisardi/404love
+```
+
+The `404love-next` skill guides App Router integration of `@404love/next`.
+
 ## Examples
 
 - [`examples/basic`](examples/basic)
