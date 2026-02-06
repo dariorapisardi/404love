@@ -28,8 +28,8 @@ top-level back link outside the iframe.
 
 ## Demo
 
-- SDK embed preview: https://404found.love/demo-next
-- Iframe embed preview: https://404found.love/demo-iframe
+- SDK embed demo: https://404found.love/demo-next
+- Iframe embed demo: https://404found.love/demo-iframe
 
 ## Options
 
