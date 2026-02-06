@@ -18,18 +18,23 @@ npm install @404love/next
 Create `app/not-found.tsx`:
 
 ```tsx
-import { createNotFoundPage } from "@404love/next"
+import { createNotFoundPage } from "@404love/next";
 
-export default createNotFoundPage()
+export default createNotFoundPage();
 ```
 
 This renders a full-page iframe pointing to `https://404found.love/frame`, plus an optional
 top-level back link outside the iframe.
 
+## Demo
+
+- SDK embed demo: https://404found.love/demo-next
+- Iframe embed demo: https://404found.love/demo-iframe
+
 ## Options
 
 ```tsx
-import { createNotFoundPage } from "@404love/next"
+import { createNotFoundPage } from "@404love/next";
 
 export default createNotFoundPage({
   includeBackLink: true,
@@ -37,7 +42,7 @@ export default createNotFoundPage({
   query: { source: "app-router" },
   iframeTitle: "404 Love Found",
   syncFrameBackground: true,
-})
+});
 ```
 
 ### Option reference
@@ -56,7 +61,7 @@ export default createNotFoundPage({
 ### Full options example
 
 ```tsx
-import { createNotFoundPage } from "@404love/next"
+import { createNotFoundPage } from "@404love/next";
 
 export default createNotFoundPage({
   baseUrl: "https://404found.love/frame",
@@ -87,7 +92,7 @@ export default createNotFoundPage({
     referrerPolicy: "no-referrer",
   },
   query: { source: "app-router", campaign: "spring-2026" },
-})
+});
 ```
 
 ## Back navigation

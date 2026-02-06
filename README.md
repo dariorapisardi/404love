@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/github/license/dariorapisardi/404love?color=0b3b2e)](LICENSE)
 [![CI](https://github.com/dariorapisardi/404love/actions/workflows/ci.yml/badge.svg?branch=main&event=push)](https://github.com/dariorapisardi/404love/actions/workflows/ci.yml)
 [![Tag](https://img.shields.io/github/v/tag/dariorapisardi/404love)](https://github.com/dariorapisardi/404love/tags)
-[![Demo](https://img.shields.io/badge/demo-linkmag.net-93314f)](https://linkmag.net/non-existing-page)
+[![Demo](https://img.shields.io/badge/demo-404found.love-93314f)](https://404found.love/demo-next)
 
 404love is a privacy-respecting 404 experience that replaces dead ends with adoptable pets.
 Lightweight, no cookies, no tracking, and built to deliver an accessible, tested 404 experience for agencies and site owners.
@@ -19,9 +19,9 @@ Star if useful. Open an issue for missing integrations, rescue sources, or acces
 3. Create `app/not-found.tsx`:
 
 ```tsx
-import { createNotFoundPage } from "@404love/next"
+import { createNotFoundPage } from "@404love/next";
 
-export default createNotFoundPage()
+export default createNotFoundPage();
 ```
 
 4. `npm run dev`, then visit `http://localhost:3000/does-not-exist`
@@ -35,8 +35,8 @@ export default createNotFoundPage()
 
 ## Demo / playground
 
-- Live demo:  https://linkmag.net/non-existing-page
-- Frame preview: https://404found.love/frame
+- Next.js SDK demo: https://404found.love/demo-next
+- Iframe embed demo: https://404found.love/demo-iframe
 
 ## Privacy and safety
 
