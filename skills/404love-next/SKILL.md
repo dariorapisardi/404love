@@ -5,7 +5,14 @@ description: Use when integrating @404love/next into a Next.js App Router projec
 
 # 404love Next.js App Router
 
-Integrate the 404love 404 experience in Next.js App Router projects using the @404love/next package.
+Provide drop-in 404 pages that replace dead ends with adoptable pets. Use the @404love/next SDK to render a full-page, accessible 404 experience (powered by the 404found iframe) in Next.js App Router projects.
+
+## Highlights
+
+- Privacy-respecting: no cookies, no tracking, no PII. Only optional `referer` query param for back navigation.
+- Content-safe: only adoptable pets, no user-generated content.
+- Accessible, tested 404 experience with built-in back navigation.
+- Lightweight iframe embed that keeps the host site in control.
 
 ## Requirements
 
@@ -58,10 +65,6 @@ export default createNotFoundPage({
 ## Back navigation
 
 The package passes a `referer` query param using server headers and the client `document.referrer`, then renders a top-level back link outside the iframe. The link navigates the host history (or detected referrer) so the user exits the iframe.
-
-## Privacy
-
-The SDK does not set cookies or track users. The only data passed is an optional `referer` URL query param for back navigation.
 
 ## Troubleshooting
 
