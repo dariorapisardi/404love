@@ -14,6 +14,7 @@ Use these options with `createNotFoundPage` to customize the iframe and back lin
 - `containerClassName`, `containerStyle`: customize the wrapper.
 - `iframeClassName`, `iframeStyle`, `iframeTitle`, `iframeProps`: customize the iframe.
 - `query`: extra query parameters (e.g. `{ source: "app-router" }`).
+- `hostSlots`: `{ search?: { action, param?, label? }, links?: [{ label, href }] }`. Renders the host's search form and up to 8 links inside the frame. Relative paths resolve against the host origin; the frame only renders URLs on the host's hostname or a subdomain.
 
 ## Full options example
 
@@ -49,5 +50,12 @@ export default createNotFoundPage({
     referrerPolicy: "no-referrer",
   },
   query: { source: "app-router", campaign: "spring-2026" },
+  hostSlots: {
+    search: { action: "/search", param: "q", label: "Search example.com" },
+    links: [
+      { label: "Home", href: "/" },
+      { label: "Docs", href: "/docs" },
+    ],
+  },
 })
 ```

@@ -19,9 +19,10 @@
   "sideEffects": false,
   "scripts": {
     "build": "tsup",
-    "test": "npm run test:integration",
+    "test": "npm run build && npm run test:unit",
     "test:integration": "npm run build",
-    "test:example": "npm --prefix ../../examples/basic run build"
+    "test:example": "npm --prefix ../../examples/basic run build",
+    "test:unit": "node --test \"tests/**/*.test.js\""
   },
   "peerDependencies": {
     "next": "^16.2.6",

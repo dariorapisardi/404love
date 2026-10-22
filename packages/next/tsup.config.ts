@@ -6,7 +6,7 @@ export default defineConfig({
     "src/notFoundPage.tsx",
     "src/NotFoundFrame.tsx",
     "src/BackLink.tsx",
-    "src/navigation.ts",
+    "src/hostSlots.ts",
     "src/url.ts",
     "src/types.ts",
   ],
