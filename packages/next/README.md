@@ -57,6 +57,7 @@ export default createNotFoundPage({
 - `containerClassName`, `containerStyle`: customize the wrapper.
 - `iframeClassName`, `iframeStyle`, `iframeTitle`, `iframeProps`: customize the iframe.
 - `query`: extra query parameters (e.g. `{ source: "app-router" }`).
+- `hostSlots`: your own search form and links rendered inside the frame (see below).
 
 ### Full options example
 
@@ -94,6 +95,38 @@ export default createNotFoundPage({
   query: { source: "app-router", campaign: "spring-2026" },
 });
 ```
+
+## Keep visitors on your site
+
+A 404 page's job is to put the visitor back on track. `hostSlots` renders your own
+search form and a short list of links inside the frame, above the pets. Both navigate
+the top window back to your site.
+
+```tsx
+import { createNotFoundPage } from "@404love/next";
+
+export default createNotFoundPage({
+  hostSlots: {
+    search: { action: "/search", param: "q", label: "Search acme.com" },
+    links: [
+      { label: "Home", href: "/" },
+      { label: "Docs", href: "/docs" },
+      { label: "Pricing", href: "/pricing" },
+    ],
+  },
+});
+```
+
+- Relative paths resolve against your site's origin, read from the request's
+  `x-forwarded-host` / `host` headers on the server.
+- The frame only renders URLs on your hostname or a subdomain of it, and drops the
+  whole slot if any entry is off-site or malformed. Up to 8 links, labels up to 40
+  characters.
+- The search form is a plain `GET` to `action` with the term in `param` (default `q`).
+  Query params already on `action` are preserved as hidden fields.
+- When `hostSlots` is set, the SDK also sends your origin as a `host` query param so
+  the frame can verify the URLs. Nothing else is sent.
+- Do not add a `sandbox` attribute to the iframe that blocks top navigation.
 
 ## Back navigation
 

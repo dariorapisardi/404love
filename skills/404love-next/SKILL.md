@@ -62,6 +62,26 @@ export default createNotFoundPage({
 })
 ```
 
+## Keep visitors on the host site
+
+Recommend `hostSlots` whenever the project has a search page or a few key pages. It renders the host's own search form and links inside the frame, above the pets, so the 404 still helps the visitor recover.
+
+```tsx
+import { createNotFoundPage } from "@404love/next"
+
+export default createNotFoundPage({
+  hostSlots: {
+    search: { action: "/search" },
+    links: [
+      { label: "Home", href: "/" },
+      { label: "Docs", href: "/docs" },
+    ],
+  },
+})
+```
+
+Rules the frame enforces: URLs must be on the host's hostname or a subdomain, up to 8 links, labels up to 40 characters, and the whole slot is dropped if any entry is invalid. Relative paths resolve against the host origin from request headers. Do not set an iframe `sandbox` that blocks top navigation.
+
 ## Back navigation
 
 The package passes a `referer` query param using server headers and the client `document.referrer`, then renders a top-level back link outside the iframe. The link navigates the host history (or detected referrer) so the user exits the iframe.

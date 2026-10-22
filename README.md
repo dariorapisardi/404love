@@ -32,6 +32,7 @@ export default createNotFoundPage();
 - An accessible, tested 404 experience for agencies and site owners.
 - Content safety: only adoptable pets, no user-generated content.
 - Lightweight embed with built-in back navigation to your site.
+- Keeps visitors on your site: `hostSlots` renders your own search form and links inside the frame.
 
 ## Demo / playground
 

@@ -105,7 +105,11 @@ const readHostBackground = () => {
   return "transparent"
 }
 
-export default function NotFoundFrame({ serverReferer, options }: NotFoundFrameProps) {
+export default function NotFoundFrame({
+  serverReferer,
+  options,
+  hostSlots,
+}: NotFoundFrameProps) {
   const [referer, setReferer] = useState(() => options.referer ?? serverReferer)
   const iframeRef = useRef<HTMLIFrameElement | null>(null)
 
@@ -123,6 +127,7 @@ export default function NotFoundFrame({ serverReferer, options }: NotFoundFrameP
     baseUrl: options.baseUrl,
     referer,
     query: options.query,
+    hostSlots,
   })
 
   const syncFrameBackground = options.syncFrameBackground !== false
