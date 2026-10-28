@@ -1,4 +1,5 @@
-import type { ResolvedHostSlots } from "./types.js"
+import { applyTheme, hasTheme } from "./theme.js"
+import type { ResolvedHostSlots, ThemePreset, ThemeTokens } from "./types.js"
 
 const DEFAULT_BASE_URL = "https://404found.love/frame"
 
@@ -37,8 +38,10 @@ export const build404Url = (options: {
   referer?: string
   query?: Record<string, QueryValue>
   hostSlots?: ResolvedHostSlots | null
+  theme?: ThemePreset
+  themeTokens?: ThemeTokens
 }) => {
-  const { baseUrl, referer, query, hostSlots } = options
+  const { baseUrl, referer, query, hostSlots, theme, themeTokens } = options
   const url = new URL(baseUrl ?? DEFAULT_BASE_URL, DEFAULT_BASE_URL)
 
   if (referer) {
@@ -56,6 +59,10 @@ export const build404Url = (options: {
 
   if (hostSlots) {
     applyHostSlots(url, hostSlots)
+  }
+
+  if (hasTheme(theme, themeTokens)) {
+    applyTheme(url, theme, themeTokens)
   }
 
   return url.toString()

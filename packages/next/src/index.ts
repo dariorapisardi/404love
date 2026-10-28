@@ -5,4 +5,7 @@ export type {
   HostSlotsOptions,
   HostSlotsSearch,
   NotFoundPageOptions,
+  ThemeFont,
+  ThemePreset,
+  ThemeTokens,
 } from "./types.js"

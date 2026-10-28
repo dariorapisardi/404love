@@ -82,6 +82,29 @@ export default createNotFoundPage({
 
 Rules the frame enforces: URLs must be on the host's hostname or a subdomain, up to 8 links, labels up to 40 characters, and the whole slot is dropped if any entry is invalid. Relative paths resolve against the host origin from request headers. Do not set an iframe `sandbox` that blocks top navigation.
 
+## Match the host's look
+
+If the host site is dark or has a clear brand palette, pass `theme` and `themeTokens` so the frame reads as part of the site. Read the colors from the project's CSS variables or Tailwind config; use hex values.
+
+```tsx
+import { createNotFoundPage } from "@404love/next"
+
+export default createNotFoundPage({
+  theme: "dark",
+  themeTokens: {
+    background: "#0D0E10",
+    surface: "#16171A",
+    text: "#F1EFEA",
+    accent: "#FF5A47",
+    onAccent: "#1A0603",
+    radius: 0,
+    font: "inter",
+  },
+})
+```
+
+`theme` is `light`, `dark` or `auto`. Fonts are limited to `system`, `inter`, `ibm-plex-sans`, `geist`, `roboto`, and radius to 0-24 px. The frame drops invalid values and any text pair below 4.5:1 contrast. `deriveTheme` (default on) fills unset tokens from the host page after load, and `autoHeight` (default on) sizes the iframe to its content; set either to `false` to opt out.
+
 ## Back navigation
 
 The package passes a `referer` query param using server headers and the client `document.referrer`, then renders a top-level back link outside the iframe. The link navigates the host history (or detected referrer) so the user exits the iframe.

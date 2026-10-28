@@ -3,6 +3,16 @@
 import type { CSSProperties, SyntheticEvent } from "react"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import BackLink from "./BackLink.js"
+import {
+  HEIGHT_MESSAGE_TYPE,
+  THEME_MESSAGE_TYPE,
+  THEME_VERSION,
+  clampFrameHeight,
+  deriveThemeFromHost,
+  derivedOnly,
+  hasTheme,
+  themedBackLinkStyle,
+} from "./theme.js"
 import { build404Url } from "./url.js"
 import type { NotFoundFrameProps } from "./types.js"
 
@@ -105,6 +115,24 @@ const readHostBackground = () => {
   return "transparent"
 }
 
+const ACCENT_PROPERTIES = ["--brand", "--primary", "--accent"]
+
+const readHostStyle = () => {
+  const html = document.documentElement
+  const htmlStyle = window.getComputedStyle(html)
+  const bodyStyle = document.body ? window.getComputedStyle(document.body) : htmlStyle
+  const background = readHostBackground()
+  const accent =
+    ACCENT_PROPERTIES.map((name) => htmlStyle.getPropertyValue(name).trim()).find(Boolean) ?? null
+  return {
+    background: background === "transparent" ? null : background,
+    color: bodyStyle.color,
+    fontFamily: bodyStyle.fontFamily,
+    accent,
+    colorScheme: htmlStyle.colorScheme,
+  }
+}
+
 export default function NotFoundFrame({
   serverReferer,
   options,
@@ -128,9 +156,24 @@ export default function NotFoundFrame({
     referer,
     query: options.query,
     hostSlots,
+    theme: options.theme,
+    themeTokens: options.themeTokens,
   })
 
   const syncFrameBackground = options.syncFrameBackground !== false
+  const deriveTheme = options.deriveTheme !== false
+  const autoHeight = options.autoHeight !== false
+  const themed = hasTheme(options.theme, options.themeTokens)
+  const [frameHeight, setFrameHeight] = useState<number | null>(null)
+  const readySignalled = useRef(false)
+
+  const frameOrigin = useMemo(() => {
+    try {
+      return new URL(src).origin
+    } catch {
+      return null
+    }
+  }, [src])
 
   const frameBackgroundTargetOrigin = useMemo(() => {
     if (options.frameBackgroundTargetOrigin) {
@@ -145,39 +188,96 @@ export default function NotFoundFrame({
     }
   }, [options.frameBackgroundTargetOrigin, src])
 
+  // Posts the host background and, with `deriveTheme`, the tokens read from
+  // the host page that were not set explicitly (those are already in the URL).
+  // Only ever sent to the frame origin; the frame validates both.
   const postFrameBackground = useCallback(() => {
-    if (!syncFrameBackground) {
-      return
-    }
-
     const frameWindow = iframeRef.current?.contentWindow
     if (!frameWindow || !frameBackgroundTargetOrigin) {
       return
     }
 
-    frameWindow.postMessage(
-      { type: MESSAGE_TYPE, color: readHostBackground() },
-      frameBackgroundTargetOrigin
-    )
-  }, [frameBackgroundTargetOrigin, syncFrameBackground])
+    if (syncFrameBackground) {
+      frameWindow.postMessage(
+        { type: MESSAGE_TYPE, color: readHostBackground() },
+        frameBackgroundTargetOrigin
+      )
+    }
+
+    if (deriveTheme) {
+      const derived = deriveThemeFromHost(readHostStyle())
+      frameWindow.postMessage(
+        {
+          type: THEME_MESSAGE_TYPE,
+          v: Number(THEME_VERSION),
+          theme: options.theme ? undefined : (derived.theme ?? undefined),
+          tokens: derivedOnly(options.themeTokens, derived.tokens),
+        },
+        frameBackgroundTargetOrigin
+      )
+    }
+  }, [
+    deriveTheme,
+    frameBackgroundTargetOrigin,
+    options.theme,
+    options.themeTokens,
+    syncFrameBackground,
+  ])
+
+  useEffect(() => {
+    // The frame reports its content height. Its first report also means its
+    // listeners are mounted, so re-send the background and theme then: the
+    // iframe `load` post can land before the frame has hydrated.
+    const handleMessage = (event: MessageEvent) => {
+      if (
+        !frameOrigin ||
+        event.origin !== frameOrigin ||
+        event.source !== iframeRef.current?.contentWindow
+      ) {
+        return
+      }
+      const data = event.data as { type?: unknown; height?: unknown } | null
+      if (!data || data.type !== HEIGHT_MESSAGE_TYPE) {
+        return
+      }
+      if (!readySignalled.current) {
+        readySignalled.current = true
+        postFrameBackground()
+      }
+      if (autoHeight) {
+        const height = clampFrameHeight(data.height)
+        if (height !== null) {
+          setFrameHeight(height)
+        }
+      }
+    }
+    window.addEventListener("message", handleMessage)
+    return () => window.removeEventListener("message", handleMessage)
+  }, [autoHeight, frameOrigin, postFrameBackground])
 
   const containerStyle = {
     ...DEFAULT_CONTAINER_STYLE,
     ...options.containerStyle,
   }
 
-  const iframeStyle = {
+  const iframeStyle: CSSProperties = {
     ...DEFAULT_IFRAME_STYLE,
+    ...(autoHeight && frameHeight !== null
+      ? { height: `${frameHeight}px`, minHeight: "100vh", flex: "0 0 auto" }
+      : {}),
     ...options.iframeStyle,
   }
 
   const backLinkStyle = {
     ...DEFAULT_BACK_LINK_STYLE,
+    ...(themed
+      ? { ...themedBackLinkStyle(options.theme, options.themeTokens), boxShadow: "none" }
+      : {}),
     ...options.backLinkStyle,
   }
 
   useEffect(() => {
-    if (!syncFrameBackground) {
+    if (!syncFrameBackground && !deriveTheme) {
       return
     }
 
@@ -215,10 +315,11 @@ export default function NotFoundFrame({
         mediaQuery.removeListener(handleMediaChange)
       }
     }
-  }, [postFrameBackground, syncFrameBackground])
+  }, [deriveTheme, postFrameBackground, syncFrameBackground])
 
   const handleFrameLoad = (event: SyntheticEvent<HTMLIFrameElement>) => {
     options.iframeProps?.onLoad?.(event)
+    readySignalled.current = false
     postFrameBackground()
   }
 

@@ -33,6 +33,7 @@ export default createNotFoundPage();
 - Content safety: only adoptable pets, no user-generated content.
 - Lightweight embed with built-in back navigation to your site.
 - Keeps visitors on your site: `hostSlots` renders your own search form and links inside the frame.
+- Looks like your site: `theme` and `themeTokens` set the frame's colors, radius and font, and by default the SDK derives them from your page and sizes the iframe to its content.
 
 ## Demo / playground
 
