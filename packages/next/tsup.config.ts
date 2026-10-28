@@ -7,6 +7,7 @@ export default defineConfig({
     "src/NotFoundFrame.tsx",
     "src/BackLink.tsx",
     "src/hostSlots.ts",
+    "src/theme.ts",
     "src/url.ts",
     "src/types.ts",
   ],

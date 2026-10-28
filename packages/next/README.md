@@ -58,6 +58,10 @@ export default createNotFoundPage({
 - `iframeClassName`, `iframeStyle`, `iframeTitle`, `iframeProps`: customize the iframe.
 - `query`: extra query parameters (e.g. `{ source: "app-router" }`).
 - `hostSlots`: your own search form and links rendered inside the frame (see below).
+- `theme`: frame color preset, `"light"`, `"dark"` or `"auto"` (see below).
+- `themeTokens`: your colors, corner radius and font for the frame (see below).
+- `deriveTheme`: read your page's colors and font and send the tokens you did not set (default: true).
+- `autoHeight`: size the iframe to the frame's content, one scrollbar (default: true).
 
 ### Full options example
 
@@ -127,6 +131,51 @@ export default createNotFoundPage({
 - When `hostSlots` is set, the SDK also sends your origin as a `host` query param so
   the frame can verify the URLs. Nothing else is sent.
 - Do not add a `sandbox` attribute to the iframe that blocks top navigation.
+
+## Match your site's look
+
+By default the frame uses 404found.love's own light palette. `theme` picks a preset
+and `themeTokens` passes your colors, corner radius and font. Both go in the frame
+URL, so the first paint already matches.
+
+```tsx
+import { createNotFoundPage } from "@404love/next";
+
+// A dark host: graphite background, square corners, one coral accent.
+export default createNotFoundPage({
+  theme: "dark",
+  themeTokens: {
+    background: "#0D0E10",
+    surface: "#16171A",
+    text: "#F1EFEA",
+    mutedText: "#A3A9B1",
+    accent: "#FF5A47",
+    onAccent: "#1A0603",
+    border: "#2A2C31",
+    radius: 0,
+    font: "ibm-plex-sans",
+  },
+});
+```
+
+- `theme`: `"light"`, `"dark"` or `"auto"` (follows `prefers-color-scheme`).
+- `themeTokens`: colors are hex (`#rgb` / `#rrggbb`). `radius` is in px, clamped to 0-24.
+  `font` is one of `system`, `inter`, `ibm-plex-sans`, `geist`, `roboto`. The fonts are
+  served by 404found.love; there are no custom font URLs and no custom CSS.
+- The frame ignores invalid values and drops any text color pair below WCAG 4.5:1
+  contrast back to the preset, so it stays readable whatever you pass.
+- `deriveTheme` (default `true`): after load, the SDK reads your page's `body`
+  background, text color and font, a `--brand` / `--primary` / `--accent` custom
+  property, and `color-scheme`, then sends the tokens you did not set to the frame.
+  Explicit `themeTokens` always win. A derived accent that fails 4.5:1 against the
+  text on it (common for light brand colors on light hosts) is dropped by design.
+  Set `deriveTheme: false` to keep the default look.
+- `autoHeight` (default `true`): the frame reports its content height and the SDK
+  sizes the iframe to it, so the page has one scrollbar. The iframe keeps a
+  `100vh` minimum. Set `autoHeight: false` for a fixed full-viewport iframe.
+- When `theme` or `themeTokens` is set, the default back link uses the frame's
+  surface, text, border and radius instead of the rose pill (for `auto` it uses the
+  light colors). `backLinkStyle` still overrides it.
 
 ## Back navigation
 
