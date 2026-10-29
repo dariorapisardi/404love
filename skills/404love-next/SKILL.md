@@ -9,7 +9,7 @@ Provide drop-in 404 pages that replace dead ends with adoptable pets. Use the @4
 
 ## Highlights
 
-- Privacy-respecting: no cookies, no tracking, no PII. Only optional `referer` query param for back navigation.
+- Privacy-respecting: no cookies, no tracking, no PII. Sends the frame an optional `referer` for back navigation, the host origin and slot URLs when `hostSlots` is set, and theme values (explicit, or read from the host page's styles with `deriveTheme`).
 - Content-safe: only adoptable pets, no user-generated content.
 - Accessible, tested 404 experience with built-in back navigation.
 - Lightweight iframe embed that keeps the host site in control.
@@ -114,3 +114,5 @@ The package passes a `referer` query param using server headers and the client `
 - Ensure the file is `app/not-found.tsx` (App Router only).
 - Remove any legacy Pages Router `pages/404.tsx` or `pages/404.js` that might override routing.
 - If the iframe background clashes with the host, set `syncFrameBackground: false` or customize `containerStyle`/`iframeStyle`.
+- If the frame picks up unwanted colors or font from the host page, set `deriveTheme: false` or pass explicit `themeTokens`.
+- If the project styles the iframe with a fixed height, set `autoHeight: false`.
