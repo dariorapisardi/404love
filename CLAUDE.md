@@ -42,7 +42,7 @@ The SDK is intentionally tiny and split into a server entry that defers to a cli
 
 The package targets ESM only (`"type": "module"`, `format: ["esm"]` in `tsup.config.ts`) and ships with `bundle: false`, so each source file emits its own `.js`/`.d.ts`. Source files import siblings using `.js` extensions (e.g. `from "./url.js"`) — this is required for the bundler-less ESM output to resolve at runtime; preserve this convention when adding new modules.
 
-Peer deps are `next ^16.2.3` and `react >=18.0.0`. The example pins React 19 and Next 16, which is the current integration target.
+Peer deps are `next ^16.2.6` and `react >=18.0.0`. Dependabot security updates rewrite this range when they bump `next` (they did in #8 and #10); revert the peer range in those PRs and keep only the example's bump. The example pins React 19 and Next 16, which is the current integration target.
 
 ## Conventions
 
