@@ -1,6 +1,6 @@
 {
   "name": "@404love/next",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Next.js helpers for 404found.love",
   "license": "MIT",
   "type": "module",
