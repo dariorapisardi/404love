@@ -16,7 +16,7 @@ Provide drop-in 404 pages that replace dead ends with adoptable pets. Use the @4
 
 ## Requirements
 
-- Use Next.js 13.4+ with App Router.
+- Use Next.js 16.2.6+ with App Router.
 - Use React 18+.
 
 ## Quick start

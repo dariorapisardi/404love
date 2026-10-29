@@ -10,7 +10,7 @@ npm install @404love/next
 
 ## Requirements
 
-- Next.js 13.4+ App Router
+- Next.js 16.2.6+ with the App Router
 - React 18+
 
 ## Quick start
