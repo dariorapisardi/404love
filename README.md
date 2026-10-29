@@ -43,7 +43,13 @@ export default createNotFoundPage();
 ## Privacy and safety
 
 - No cookies, no tracking, no PII collected by the SDK.
-- The only data passed is an optional `referer` URL query param to enable back navigation.
+- What the SDK sends to the frame:
+  - an optional `referer` URL query param to enable back navigation;
+  - with `hostSlots`, your site's origin and the slot labels and URLs you configured;
+  - with `theme` / `themeTokens`, those values in the frame URL;
+  - with `deriveTheme` (on by default), your page's background, text color, font, brand
+    color custom property and `color-scheme`, posted to the frame after load. Set
+    `deriveTheme: false` to stop this.
 - Content is limited to adoptable pets (no user-generated content).
 
 ## Packages

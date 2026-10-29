@@ -183,6 +183,26 @@ The package passes a `referer` query param using server headers and the client
 `document.referrer`, then renders a top-level back link outside the iframe. That link
 navigates the host history (or the detected referrer) so the user exits the iframe.
 
+## What is sent to the frame
+
+The SDK sets no cookies and collects no PII. It sends 404found.love:
+
+- the `referer` query param, for back navigation;
+- with `hostSlots`, your origin and the slot labels and URLs;
+- with `theme` / `themeTokens`, those values in the frame URL;
+- with `deriveTheme` (default `true`), your page's background, text color, font, brand
+  custom property and `color-scheme`, posted to the frame origin only.
+
+## Upgrading from 0.3
+
+`deriveTheme` and `autoHeight` are on by default since 0.4.0, so after upgrading the
+frame picks up your page's colors and font and the iframe sizes to its content. To keep
+the 0.3 look and a fixed full-viewport iframe:
+
+```tsx
+export default createNotFoundPage({ deriveTheme: false, autoHeight: false });
+```
+
 ## Example app
 
 See the repository for a minimal Next.js example in [`examples/basic`](../../examples/basic).
